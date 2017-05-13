@@ -15,6 +15,7 @@ def random_choice(choices):
 	return choices[-1]
 
 class TestRandom(unittest.TestCase):
+
 	@mock.patch('random.choice', side_effect=random_choice)
 	def test_random_choice(self, random_choice_function):
 		assert random.choice([1, 2, 3]) == 3
@@ -43,6 +44,7 @@ def random_choice(choices):
 	return choices[-1]
 
 class TestRandom(unittest.TestCase):
+
 	@mock.patch('__main__.choice', side_effect=random_choice)
 	def test_random_choice(self, random_choice_function):
 		assert choice([1, 2, 3]) == 3
@@ -71,6 +73,7 @@ def random_choice(choices):
 	return choices[-1]
 
 class TestRandom(unittest.TestCase):
+
 	@mock.patch('helper_1.choice', side_effect=random_choice)
 	def test_random_choice(self, random_choice_function):
 		assert get_random([1, 2, 3]) == 3
@@ -82,12 +85,14 @@ if __name__ == "__main__":
 ### return value
 tidak menggunakan side_effect
 
+mock_1.py
 ```python
 import random
 import unittest
 import mock
 
 class TestRandom(unittest.TestCase):
+
 	@mock.patch('random.choice', return_value=5)
 	def test_random_choice(self, random_choice_function):
 		assert random.choice([1, 2, 3]) == 5
@@ -98,6 +103,7 @@ if __name__ == "__main__":
 
 ### mengganti mock option on the fly
 
+mock_1.py
 ```python
 import random
 import unittest
@@ -120,9 +126,6 @@ class TestRandom(unittest.TestCase):
 		random_choice_function.side_effect = random_choice
 		assert random.choice([1, 2, 3]) == 3
 
-
-
-
 if __name__ == "__main__":
 	unittest.main()
 ```
@@ -130,6 +133,7 @@ if __name__ == "__main__":
 
 ### cek mock telah dipanggil / berapa kalai telah dipanggil & reset mock
 
+mock_1.py
 ```python
 import random
 import unittest
@@ -158,6 +162,7 @@ if __name__ == "__main__":
 
 ### cek mock dipanggil dengan argumen apa
 
+mock_1.py
 ```python
 import random
 import unittest
@@ -188,6 +193,34 @@ class TestRandom(unittest.TestCase):
 		assert args == (9,)
 		assert kwargs == {}
 
+if __name__ == "__main__":
+	unittest.main()
+```
+
+### autospec
+untuk memastikan bahwa mock function dipanggil dengan jumlah argument yang benar
+
+mock_1.py
+```python
+import random
+import unittest
+import mock
+
+def multiply(a, b):
+	return a * b
+
+class TestRandom(unittest.TestCase):
+
+	@mock.patch('random.choice', return_value=5)
+	def test_random_choice_1(self, random_choice_function):
+		# nggak error
+		assert random.choice(1, 2, 3) == 5
+
+	@mock.patch('random.choice', autospec=True, return_value=5)
+	def test_random_choice_2(self, random_choice_function):
+		# error 
+		assert random.choice(1, 2, 3) == 5
+
 
 if __name__ == "__main__":
 	unittest.main()
@@ -200,6 +233,3 @@ if __name__ == "__main__":
 with mock.patch('random.choice', return_value=3) as random_choice_function:
 	assert random.choice([1, 2, 3]) == 3
 ```
-
-
-
